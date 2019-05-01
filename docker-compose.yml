@@ -1,0 +1,28 @@
+version: '3'
+
+
+services:
+  web:
+    build:
+      context: .
+    depends_on:
+      - db
+      - cache
+    environment:
+      - DB_HOST=db
+      - DB_USER=stark
+      - DB_NAME=avengers
+    ports:
+      - "44500:5000"
+
+  db:
+    image: postgres:latest
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./scripts/init:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=stark
+      - POSTGRES_DB=avengers
+
+  cache:
+    image: redis:latest
